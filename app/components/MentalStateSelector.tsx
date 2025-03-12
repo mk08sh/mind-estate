@@ -29,20 +29,20 @@ interface SpectrumSliderProps {
 
 const SPECTRUM_COLORS = {
   focus: {
-    range: 'bg-blue-500',
-    thumb: 'border-blue-500 hover:bg-blue-50 focus:ring-blue-500',
+    range: 'bg-gray-900',
+    thumb: 'border-gray-900 hover:bg-gray-50 focus:ring-gray-900',
   },
   energy: {
-    range: 'bg-green-500',
-    thumb: 'border-green-500 hover:bg-green-50 focus:ring-green-500',
+    range: 'bg-gray-900',
+    thumb: 'border-gray-900 hover:bg-gray-50 focus:ring-gray-900',
   },
   mood: {
-    range: 'bg-purple-500',
-    thumb: 'border-purple-500 hover:bg-purple-50 focus:ring-purple-500',
+    range: 'bg-gray-900',
+    thumb: 'border-gray-900 hover:bg-gray-50 focus:ring-gray-900',
   },
   curiosity: {
-    range: 'bg-orange-500',
-    thumb: 'border-orange-500 hover:bg-orange-50 focus:ring-orange-500',
+    range: 'bg-gray-900',
+    thumb: 'border-gray-900 hover:bg-gray-50 focus:ring-gray-900',
   },
 };
 

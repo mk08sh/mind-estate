@@ -31,10 +31,10 @@ export default function EnergyLevel() {
             onValueChange={handleEnergyChange}
           >
             <Slider.Track className="bg-gray-200 relative grow rounded-full h-2">
-              <Slider.Range className="absolute bg-green-500 rounded-full h-full" />
+              <Slider.Range className="absolute bg-gray-900 rounded-full h-full" />
             </Slider.Track>
             <Slider.Thumb
-              className="block w-5 h-5 bg-white border-2 border-green-500 rounded-full hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="block w-5 h-5 bg-white border-2 border-gray-900 rounded-full hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-900"
               aria-label="Energy Level"
             />
           </Slider.Root>
@@ -43,7 +43,7 @@ export default function EnergyLevel() {
             <span>High</span>
           </div>
         </div>
-        <div className="text-2xl font-bold text-green-500">
+        <div className="text-2xl font-bold text-gray-900">
           {energy}%
         </div>
       </div>
