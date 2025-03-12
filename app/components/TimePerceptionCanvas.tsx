@@ -165,7 +165,7 @@ export default function TimePerceptionCanvas() {
     <div className="space-y-6">
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-900">Time Perception Test</h2>
-        <p className="mt-2 text-gray-600">Test your ability to perceive time accurately</p>
+        <p className="mt-2 text-gray-600">Test your time perception based on the state of mind you're in</p>
       </div>
 
       <div className="bg-white rounded-xl border-2 border-gray-100 p-6 space-y-6">
