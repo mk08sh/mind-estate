@@ -13,19 +13,9 @@ export default function Home() {
   const { currentEntry, addEntry, resetCurrentEntry } = useADHDStore();
 
   const handleSave = () => {
-    if (currentEntry.mentalState?.energy !== undefined && currentEntry.activity) {
-      // Ensure all required fields are present
-      const completeEntry: Omit<Entry, 'id' | 'timestamp'> = {
-        activity: currentEntry.activity,
-        mentalState: currentEntry.mentalState,
-        timePerception: currentEntry.timePerception,
-        notes: currentEntry.notes || '',
-        drawing: currentEntry.drawing || '',
-        effectiveness: currentEntry.effectiveness || 5
-      };
-      addEntry(completeEntry);
-      resetCurrentEntry();
-    }
+    // Save the entry with whatever fields are filled out
+    addEntry(currentEntry);
+    resetCurrentEntry();
   };
 
   return (
@@ -70,11 +60,8 @@ export default function Home() {
                 <div className="flex justify-end pt-6">
                   <button
                     onClick={handleSave}
-                    disabled={currentEntry.mentalState?.energy === undefined || !currentEntry.activity}
                     className="px-8 py-3 text-lg font-medium rounded-xl bg-blue-600 text-white 
-                             hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed
-                             transition-colors duration-200 shadow-md hover:shadow-lg
-                             disabled:hover:bg-blue-600 disabled:hover:shadow-md"
+                             hover:bg-blue-700 transition-colors duration-200 shadow-md hover:shadow-lg"
                   >
                     Save Entry
                   </button>

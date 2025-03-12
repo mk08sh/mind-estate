@@ -20,10 +20,10 @@ export interface TimePerception {
 export interface Entry {
   id: string;
   timestamp: string;
-  mentalState: MentalStateSpectrum;
-  activity: string;
-  effectiveness: number;
-  notes: string;
+  mentalState?: MentalStateSpectrum;
+  activity?: string;
+  effectiveness?: number;
+  notes?: string;
   drawing?: string;
   timePerception?: TimePerception;
 }
@@ -31,7 +31,7 @@ export interface Entry {
 interface ADHDStore {
   entries: Entry[];
   currentEntry: Partial<Entry>;
-  addEntry: (entry: Omit<Entry, 'id' | 'timestamp'>) => void;
+  addEntry: (entry: Partial<Omit<Entry, 'id' | 'timestamp'>>) => void;
   updateCurrentEntry: (update: Partial<Entry>) => void;
   resetCurrentEntry: () => void;
   clearEntries: () => void;
@@ -41,14 +41,7 @@ export const useADHDStore = create<ADHDStore>()(
   persist(
     (set) => ({
       entries: [],
-      currentEntry: {
-        mentalState: {
-          focus: 50,
-          energy: 50,
-          mood: 50,
-          curiosity: 50,
-        },
-      },
+      currentEntry: {},
       addEntry: (entry) => 
         set((state) => ({
           entries: [
@@ -66,14 +59,7 @@ export const useADHDStore = create<ADHDStore>()(
         })),
       resetCurrentEntry: () =>
         set(() => ({
-          currentEntry: {
-            mentalState: {
-              focus: 50,
-              energy: 50,
-              mood: 50,
-              curiosity: 50,
-            },
-          },
+          currentEntry: {}
         })),
       clearEntries: () => set({ entries: [] }),
     }),
