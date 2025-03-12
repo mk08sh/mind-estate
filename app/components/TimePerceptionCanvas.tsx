@@ -3,6 +3,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import CanvasDraw from 'react-canvas-draw';
 import { useADHDStore } from '../store/adhd-store';
+import { toast } from 'react-hot-toast';
 
 type TestType = 'drawing' | 'counting' | 'meditation' | 'tapping';
 
@@ -98,9 +99,28 @@ export default function TimePerceptionCanvas() {
       accuracy,
     });
 
-    const drawing = currentTest.type === 'drawing' ? canvasRef.current?.getSaveData() : null;
+    let drawing = null;
+    if (currentTest.type === 'drawing' && canvasRef.current) {
+      try {
+        // Save the drawing data directly from react-canvas-draw
+        drawing = canvasRef.current.getSaveData();
+        
+        // Only save if there are actual lines drawn
+        const drawingData = JSON.parse(drawing);
+        if (drawingData.lines && drawingData.lines.length > 0) {
+          // Keep the drawing data as is - we'll render it later
+          console.log('Drawing saved successfully');
+        } else {
+          drawing = null;
+        }
+      } catch (error) {
+        console.error('Failed to save drawing:', error);
+        toast.error('Failed to save drawing');
+        drawing = null;
+      }
+    }
     
-    updateCurrentEntry({
+    const entry = {
       drawing,
       timePerception: {
         actual: actualTime,
@@ -108,7 +128,14 @@ export default function TimePerceptionCanvas() {
         testType: currentTest.type,
         accuracy,
       }
-    });
+    };
+
+    try {
+      updateCurrentEntry(entry);
+    } catch (error) {
+      console.error('Failed to update entry:', error);
+      toast.error('Failed to save test results');
+    }
     
     setIsActive(false);
     setStartTime(null);

@@ -3,6 +3,7 @@
 import React from 'react';
 import { format } from 'date-fns';
 import { useADHDStore, Entry, TimeTestType, MentalStateSpectrum } from '../store/adhd-store';
+import CanvasDraw from 'react-canvas-draw';
 
 const TEST_TYPE_LABELS: Record<TimeTestType, string> = {
   drawing: 'Drawing Test',
@@ -38,6 +39,21 @@ function StateBar({ label, value, colorClass }: StateBarProps) {
         />
       </div>
     </div>
+  );
+}
+
+function SavedDrawing({ drawingData }: { drawingData: string }) {
+  return (
+    <CanvasDraw
+      disabled
+      hideGrid
+      immediateLoading
+      saveData={drawingData}
+      brushRadius={2}
+      canvasWidth={400}
+      canvasHeight={300}
+      className="mx-auto border rounded"
+    />
   );
 }
 
@@ -115,14 +131,10 @@ function EntryCard({ entry }: { entry: Entry }) {
         </div>
       )}
 
-      {entry.drawing && (
+      {entry.drawing && timePerception?.testType === 'drawing' && (
         <div>
           <div className="text-sm text-gray-600 mb-2">Drawing</div>
-          <img
-            src={entry.drawing}
-            alt="Mind state drawing"
-            className="border rounded-lg w-full max-w-sm mx-auto"
-          />
+          <SavedDrawing drawingData={entry.drawing} />
         </div>
       )}
     </div>
