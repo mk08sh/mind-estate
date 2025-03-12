@@ -1,5 +1,6 @@
 'use client';
 
+// Force redeploy - v1
 import React, { useState, useEffect } from 'react';
 import MentalStateSelector from './components/MentalStateSelector';
 import EnergyLevel from './components/EnergyLevel';
