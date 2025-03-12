@@ -6,15 +6,24 @@ import EnergyLevel from './components/EnergyLevel';
 import TimePerceptionCanvas from './components/TimePerceptionCanvas';
 import ActivityTracker from './components/ActivityTracker';
 import HistoryView from './components/HistoryView';
-import { useADHDStore } from './store/adhd-store';
+import { useADHDStore, Entry } from './store/adhd-store';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'track' | 'history'>('track');
   const { currentEntry, addEntry, resetCurrentEntry } = useADHDStore();
 
   const handleSave = () => {
-    if (currentEntry.mentalState && currentEntry.energyLevel && currentEntry.activity) {
-      addEntry(currentEntry as any);
+    if (currentEntry.mentalState?.energy !== undefined && currentEntry.activity) {
+      // Ensure all required fields are present
+      const completeEntry: Omit<Entry, 'id' | 'timestamp'> = {
+        activity: currentEntry.activity,
+        mentalState: currentEntry.mentalState,
+        timePerception: currentEntry.timePerception,
+        notes: currentEntry.notes || '',
+        drawing: currentEntry.drawing || '',
+        effectiveness: currentEntry.effectiveness || 5
+      };
+      addEntry(completeEntry);
       resetCurrentEntry();
     }
   };
@@ -61,7 +70,7 @@ export default function Home() {
                 <div className="flex justify-end pt-6">
                   <button
                     onClick={handleSave}
-                    disabled={!currentEntry.mentalState || !currentEntry.energyLevel || !currentEntry.activity}
+                    disabled={currentEntry.mentalState?.energy === undefined || !currentEntry.activity}
                     className="px-8 py-3 text-lg font-medium rounded-xl bg-blue-600 text-white 
                              hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed
                              transition-colors duration-200 shadow-md hover:shadow-lg
