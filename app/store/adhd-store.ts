@@ -34,6 +34,7 @@ interface ADHDStore {
   addEntry: (entry: Omit<Entry, 'id' | 'timestamp'>) => void;
   updateCurrentEntry: (update: Partial<Entry>) => void;
   resetCurrentEntry: () => void;
+  clearEntries: () => void;
 }
 
 export const useADHDStore = create<ADHDStore>()(
@@ -74,6 +75,7 @@ export const useADHDStore = create<ADHDStore>()(
             },
           },
         })),
+      clearEntries: () => set({ entries: [] }),
     }),
     {
       name: 'adhd-tracker',

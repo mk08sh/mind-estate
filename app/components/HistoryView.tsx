@@ -126,11 +126,26 @@ function EntryCard({ entry }: { entry: Entry }) {
 }
 
 export default function HistoryView() {
-  const { entries } = useADHDStore();
+  const { entries, clearEntries } = useADHDStore();
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-gray-900">History</h2>
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold text-gray-900">History</h2>
+        {entries.length > 0 && (
+          <button
+            onClick={() => {
+              if (confirm('Are you sure you want to clear all history? This cannot be undone.')) {
+                clearEntries();
+              }
+            }}
+            className="px-4 py-2 text-sm font-medium rounded-lg bg-red-600 text-white 
+                     hover:bg-red-700 transition-colors duration-200 shadow-sm hover:shadow-md"
+          >
+            Clear History
+          </button>
+        )}
+      </div>
       <div className="space-y-4">
         {entries.length === 0 ? (
           <div className="text-center py-12 bg-gray-50 rounded-xl">
