@@ -32,7 +32,7 @@ export default function ActivityTracker() {
           id="activity"
           value={currentEntry.activity || ''}
           onChange={handleActivityChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900"
           placeholder="e.g., Working, Reading, Studying..."
         />
       </div>
@@ -52,10 +52,10 @@ export default function ActivityTracker() {
               onValueChange={handleEffectivenessChange}
             >
               <Slider.Track className="bg-gray-200 relative grow rounded-full h-2">
-                <Slider.Range className="absolute bg-green-500 rounded-full h-full" />
+                <Slider.Range className="absolute bg-gray-900 rounded-full h-full" />
               </Slider.Track>
               <Slider.Thumb
-                className="block w-5 h-5 bg-white border-2 border-green-500 rounded-full hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="block w-5 h-5 bg-white border-2 border-gray-900 rounded-full hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-900"
                 aria-label="Effectiveness"
               />
             </Slider.Root>
@@ -64,7 +64,7 @@ export default function ActivityTracker() {
               <span>Very Effective</span>
             </div>
           </div>
-          <div className="text-2xl font-bold text-green-500">
+          <div className="text-2xl font-bold text-gray-900">
             {currentEntry.effectiveness || 5}/10
           </div>
         </div>
@@ -79,7 +79,7 @@ export default function ActivityTracker() {
           value={currentEntry.notes || ''}
           onChange={handleNotesChange}
           rows={4}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900"
           placeholder="Any observations about your current state..."
         />
       </div>

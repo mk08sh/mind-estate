@@ -12,10 +12,10 @@ const TEST_TYPE_LABELS: Record<TimeTestType, string> = {
 };
 
 const STATE_COLORS = {
-  focus: 'bg-blue-500',
-  energy: 'bg-green-500',
-  mood: 'bg-purple-500',
-  curiosity: 'bg-orange-500',
+  focus: 'bg-gray-900',
+  energy: 'bg-gray-900',
+  mood: 'bg-gray-900',
+  curiosity: 'bg-gray-900',
 };
 
 interface StateBarProps {
@@ -46,9 +46,9 @@ function EntryCard({ entry }: { entry: Entry }) {
   const mentalState = entry.mentalState;
 
   const getAccuracyColor = (accuracy: number) => {
-    if (accuracy >= 90) return 'bg-green-500';
-    if (accuracy >= 70) return 'bg-blue-500';
-    return 'bg-orange-500';
+    if (accuracy >= 90) return 'bg-gray-900';
+    if (accuracy >= 70) return 'bg-gray-900';
+    return 'bg-gray-900';
   };
 
   return (
@@ -60,21 +60,25 @@ function EntryCard({ entry }: { entry: Entry }) {
             {format(new Date(entry.timestamp), 'MMM d, yyyy h:mm a')}
           </p>
         </div>
-        <div className="text-right">
-          <div className="font-medium text-gray-700">Effectiveness</div>
-          <div className="text-blue-600 font-medium">{entry.effectiveness}/10</div>
-        </div>
+        {entry.effectiveness !== undefined && (
+          <div className="text-right">
+            <div className="font-medium text-gray-700">Effectiveness</div>
+            <div className="text-gray-900 font-medium">{entry.effectiveness}/10</div>
+          </div>
+        )}
       </div>
 
-      <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-        <h4 className="font-medium text-gray-900 mb-3">Mental State</h4>
-        <div className="space-y-3">
-          <StateBar label="Focus" value={mentalState.focus} colorClass={STATE_COLORS.focus} />
-          <StateBar label="Energy" value={mentalState.energy} colorClass={STATE_COLORS.energy} />
-          <StateBar label="Mood" value={mentalState.mood} colorClass={STATE_COLORS.mood} />
-          <StateBar label="Curiosity" value={mentalState.curiosity} colorClass={STATE_COLORS.curiosity} />
+      {mentalState && (
+        <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+          <h4 className="font-medium text-gray-900 mb-3">Mental State</h4>
+          <div className="space-y-3">
+            <StateBar label="Focus" value={mentalState.focus} colorClass={STATE_COLORS.focus} />
+            <StateBar label="Energy" value={mentalState.energy} colorClass={STATE_COLORS.energy} />
+            <StateBar label="Mood" value={mentalState.mood} colorClass={STATE_COLORS.mood} />
+            <StateBar label="Curiosity" value={mentalState.curiosity} colorClass={STATE_COLORS.curiosity} />
+          </div>
         </div>
-      </div>
+      )}
 
       {timePerception && (
         <div className="bg-gray-50 rounded-lg p-4 space-y-3">

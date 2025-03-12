@@ -54,9 +54,9 @@ export default function Home() {
             {activeTab === 'track' ? (
               <div className="space-y-12">
                 <TimePerceptionCanvas />
-                <ActivityTracker />
                 <MentalStateSelector />
                 <EnergyLevel />
+                <ActivityTracker />
                 <div className="flex justify-end pt-6">
                   <button
                     onClick={handleSave}
