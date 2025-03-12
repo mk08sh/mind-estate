@@ -44,6 +44,9 @@ export const useADHDStore = create<ADHDStore>()(
       entries: [],
       currentEntry: {},
       addEntry: (entry) => {
+        // Only proceed if we're in a browser environment
+        if (typeof window === 'undefined') return;
+
         const newEntry = {
           ...entry,
           id: crypto.randomUUID(),
@@ -75,21 +78,44 @@ export const useADHDStore = create<ADHDStore>()(
           currentEntry: {}, // Reset current entry after saving
         }));
       },
-      updateCurrentEntry: (update) =>
+      updateCurrentEntry: (update) => {
+        // Only proceed if we're in a browser environment
+        if (typeof window === 'undefined') return;
+        
         set((state) => ({
           currentEntry: { ...state.currentEntry, ...update },
-        })),
-      resetCurrentEntry: () =>
+        }));
+      },
+      resetCurrentEntry: () => {
+        // Only proceed if we're in a browser environment
+        if (typeof window === 'undefined') return;
+        
         set(() => ({
           currentEntry: {}
-        })),
-      clearEntries: () => set({ entries: [] }),
+        }));
+      },
+      clearEntries: () => {
+        // Only proceed if we're in a browser environment
+        if (typeof window === 'undefined') return;
+        
+        set({ entries: [] });
+      },
     }),
     {
       name: 'adhd-tracker',
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => {
+        // Check if window is available
+        if (typeof window !== 'undefined') {
+          return window.localStorage;
+        }
+        return {
+          getItem: () => Promise.resolve(null),
+          setItem: () => Promise.resolve(),
+          removeItem: () => Promise.resolve(),
+        };
+      }),
       skipHydration: true,
-      version: 1, // Add version for potential future migrations
+      version: 1,
     }
   )
 ); 

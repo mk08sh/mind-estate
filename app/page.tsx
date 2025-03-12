@@ -19,9 +19,11 @@ export default function Home() {
   useEffect(() => {
     const hydrateStore = async () => {
       try {
-        // @ts-ignore - Hydrate the store
-        await useADHDStore.persist.rehydrate();
-        setIsHydrated(true);
+        if (typeof window !== 'undefined') {
+          // @ts-ignore - Hydrate the store
+          await useADHDStore.persist.rehydrate();
+          setIsHydrated(true);
+        }
       } catch (error) {
         console.error('Failed to hydrate store:', error);
         // Still set hydrated to true to allow the app to function
@@ -62,8 +64,8 @@ export default function Home() {
     }
   };
 
-  // Show a loading state while hydrating
-  if (!isHydrated) {
+  // Show a loading state while hydrating or during SSR
+  if (typeof window === 'undefined' || !isHydrated) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -120,8 +122,8 @@ export default function Home() {
           <div className="p-8">
             {activeTab === 'track' ? (
               <div className="space-y-12">
-                <TimePerceptionCanvas />
                 <MentalStateSelector />
+                <TimePerceptionCanvas />
                 <EnergyLevel />
                 <ActivityTracker />
                 <div className="flex justify-end pt-6">

@@ -67,15 +67,21 @@ export default function TimePerceptionCanvas() {
   const [prompt, setPrompt] = useState('');
   const [currentTest, setCurrentTest] = useState<TimeTest>(TIME_TESTS[0]);
   const [tapCount, setTapCount] = useState(0);
+  const [isMounted, setIsMounted] = useState(false);
   const { updateCurrentEntry } = useADHDStore();
 
   useEffect(() => {
-    if (currentTest.type === 'drawing') {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (currentTest.type === 'drawing' && isMounted) {
       setPrompt(DRAWING_PROMPTS[Math.floor(Math.random() * DRAWING_PROMPTS.length)]);
     }
-  }, [currentTest]);
+  }, [currentTest, isMounted]);
 
   const handleStart = () => {
+    if (!isMounted) return;
     setIsActive(true);
     setStartTime(Date.now());
     setResults(null);
@@ -86,7 +92,7 @@ export default function TimePerceptionCanvas() {
   };
 
   const handleStop = () => {
-    if (!startTime) return;
+    if (!startTime || !isMounted) return;
     
     const actualTime = (Date.now() - startTime) / 1000;
     const difference = Math.abs(actualTime - currentTest.targetSeconds);
@@ -102,13 +108,9 @@ export default function TimePerceptionCanvas() {
     let drawing = null;
     if (currentTest.type === 'drawing' && canvasRef.current) {
       try {
-        // Save the drawing data directly from react-canvas-draw
         drawing = canvasRef.current.getSaveData();
-        
-        // Only save if there are actual lines drawn
         const drawingData = JSON.parse(drawing);
         if (drawingData.lines && drawingData.lines.length > 0) {
-          // Keep the drawing data as is - we'll render it later
           console.log('Drawing saved successfully');
         } else {
           drawing = null;
@@ -154,75 +156,97 @@ export default function TimePerceptionCanvas() {
     }
   };
 
+  // Don't render anything during SSR
+  if (typeof window === 'undefined' || !isMounted) {
+    return null;
+  }
+
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-900">Time Blindness Test</h2>
-        <p className="mt-2 text-gray-600">{currentTest.description}</p>
-      </div>
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-semibold">Time Blindness Test</h2>
-        <div className="flex space-x-2">
-          {!isActive && (
-            <button
-              onClick={handleNextTest}
-              className="px-6 py-2 rounded-lg border-2 border-gray-200 
-                       hover:border-gray-300 text-gray-600 hover:text-gray-900
-                       transition-all duration-200"
-            >
-              Try Different Test
-            </button>
-          )}
-          <button
-            onClick={isActive ? handleStop : handleStart}
-            className={`px-6 py-2 rounded-lg font-medium ${
-              isActive
-                ? 'bg-green-500 hover:bg-green-600 text-white'
-                : 'bg-blue-500 hover:bg-blue-600 text-white'
-            } transition-colors duration-200`}
-          >
-            {isActive ? "I Think Time's Up" : "Start Test"}
-          </button>
-        </div>
+        <h2 className="text-2xl font-bold text-gray-900">Time Perception Test</h2>
+        <p className="mt-2 text-gray-600">Test your ability to perceive time accurately</p>
       </div>
 
       <div className="bg-white rounded-xl border-2 border-gray-100 p-6 space-y-6">
         {!isActive && !results && (
-          <div className="text-center">
-            <p className="text-lg text-gray-700 mb-4">{currentTest.instructions}</p>
-            <p className="text-sm text-gray-500">Target time: {currentTest.targetSeconds} seconds</p>
+          <div className="space-y-6">
+            <div className="text-center">
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">{currentTest.title}</h3>
+              <p className="text-lg text-gray-700 mb-2">{currentTest.instructions}</p>
+              <p className="text-sm text-gray-500">Target time: {currentTest.targetSeconds} seconds</p>
+            </div>
+            
+            <div className="flex justify-center space-x-4">
+              <button
+                onClick={handleNextTest}
+                className="px-6 py-2 rounded-lg border-2 border-gray-200 
+                         hover:border-gray-300 text-gray-600 hover:text-gray-900
+                         transition-all duration-200"
+              >
+                Try Different Test
+              </button>
+              <button
+                onClick={handleStart}
+                className="px-6 py-2 rounded-lg font-medium bg-blue-500 hover:bg-blue-600 
+                         text-white transition-colors duration-200"
+              >
+                Start Test
+              </button>
+            </div>
           </div>
         )}
 
-        {currentTest.type === 'drawing' && (
+        {isActive && (
           <div className="space-y-4">
-            {isActive && <p className="text-lg text-gray-700 text-center">{prompt}</p>}
-            <CanvasDraw
-              ref={canvasRef}
-              brushRadius={2}
-              lazyRadius={0}
-              brushColor="#000000"
-              canvasWidth={400}
-              canvasHeight={300}
-              disabled={!isActive}
-              hideGrid
-              className="mx-auto border rounded"
-            />
-          </div>
-        )}
+            {currentTest.type === 'drawing' && (
+              <>
+                <p className="text-lg text-gray-700 text-center">{prompt}</p>
+                <CanvasDraw
+                  ref={canvasRef}
+                  brushRadius={2}
+                  lazyRadius={0}
+                  brushColor="#000000"
+                  canvasWidth={400}
+                  canvasHeight={300}
+                  disabled={!isActive}
+                  hideGrid
+                  className="mx-auto border rounded"
+                />
+              </>
+            )}
 
-        {currentTest.type === 'tapping' && isActive && (
-          <button
-            onClick={handleTap}
-            className="w-full py-12 rounded-xl bg-blue-50 hover:bg-blue-100 
-                     transition-colors duration-200 text-blue-600 text-xl font-medium"
-          >
-            Tap Here ({tapCount} taps)
-          </button>
+            {currentTest.type === 'tapping' && (
+              <button
+                onClick={handleTap}
+                className="w-full py-12 rounded-xl bg-blue-50 hover:bg-blue-100 
+                         transition-colors duration-200 text-blue-600 text-xl font-medium"
+              >
+                Tap Here ({tapCount} taps)
+              </button>
+            )}
+
+            {currentTest.type !== 'drawing' && currentTest.type !== 'tapping' && (
+              <div className="text-center py-12">
+                <p className="text-xl text-gray-700 mb-4">{currentTest.instructions}</p>
+                <p className="text-gray-500">Close your eyes and focus on your internal clock</p>
+              </div>
+            )}
+
+            <div className="flex justify-center">
+              <button
+                onClick={handleStop}
+                className="px-8 py-3 rounded-lg font-medium bg-green-500 hover:bg-green-600 
+                         text-white transition-colors duration-200"
+              >
+                I Think Time's Up
+              </button>
+            </div>
+          </div>
         )}
 
         {results && (
-          <div className="space-y-4 bg-gray-50 rounded-lg p-4">
+          <div className="space-y-4">
             <h3 className="text-xl font-semibold text-gray-900">Results</h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -249,6 +273,17 @@ export default function TimePerceptionCanvas() {
             ) : (
               <p className="text-orange-600">Your time perception was quite different from actual time.</p>
             )}
+            
+            <div className="flex justify-center pt-4">
+              <button
+                onClick={handleNextTest}
+                className="px-6 py-2 rounded-lg border-2 border-gray-200 
+                         hover:border-gray-300 text-gray-600 hover:text-gray-900
+                         transition-all duration-200"
+              >
+                Try Different Test
+              </button>
+            </div>
           </div>
         )}
       </div>
