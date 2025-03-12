@@ -17,7 +17,7 @@ interface TimeTest {
 const TIME_TESTS: TimeTest[] = [
   {
     type: 'drawing',
-    title: 'Drawing Test',
+    title: 'Time Blindness Test',
     description: 'Draw until you think the time is up',
     targetSeconds: 30,
     instructions: 'Draw freely until you think 30 seconds have passed',
@@ -130,8 +130,33 @@ export default function TimePerceptionCanvas() {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-900">{currentTest.title}</h2>
+        <h2 className="text-2xl font-bold text-gray-900">Time Blindness Test</h2>
         <p className="mt-2 text-gray-600">{currentTest.description}</p>
+      </div>
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-semibold">Time Blindness Test</h2>
+        <div className="flex space-x-2">
+          {!isActive && (
+            <button
+              onClick={handleNextTest}
+              className="px-6 py-2 rounded-lg border-2 border-gray-200 
+                       hover:border-gray-300 text-gray-600 hover:text-gray-900
+                       transition-all duration-200"
+            >
+              Try Different Test
+            </button>
+          )}
+          <button
+            onClick={isActive ? handleStop : handleStart}
+            className={`px-6 py-2 rounded-lg font-medium ${
+              isActive
+                ? 'bg-green-500 hover:bg-green-600 text-white'
+                : 'bg-blue-500 hover:bg-blue-600 text-white'
+            } transition-colors duration-200`}
+          >
+            {isActive ? "I Think Time's Up" : "Start Test"}
+          </button>
+        </div>
       </div>
 
       <div className="bg-white rounded-xl border-2 border-gray-100 p-6 space-y-6">
@@ -199,29 +224,6 @@ export default function TimePerceptionCanvas() {
             )}
           </div>
         )}
-
-        <div className="flex justify-center space-x-4">
-          {!isActive && (
-            <button
-              onClick={handleNextTest}
-              className="px-6 py-2 rounded-lg border-2 border-gray-200 
-                       hover:border-gray-300 text-gray-600 hover:text-gray-900
-                       transition-all duration-200"
-            >
-              Try Different Test
-            </button>
-          )}
-          <button
-            onClick={isActive ? handleStop : handleStart}
-            className={`px-6 py-2 rounded-lg font-medium ${
-              isActive
-                ? 'bg-green-500 hover:bg-green-600 text-white'
-                : 'bg-blue-500 hover:bg-blue-600 text-white'
-            } transition-colors duration-200`}
-          >
-            {isActive ? "I Think Time's Up" : "Start Test"}
-          </button>
-        </div>
       </div>
     </div>
   );

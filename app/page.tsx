@@ -22,7 +22,7 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
       <div className="max-w-5xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">ADHD State Tracker</h1>
+          <h1 className="text-5xl font-bold text-gray-900 mb-4">Mind Mirror</h1>
           <p className="text-xl text-gray-600">Track your mental states, energy levels, and time perception</p>
         </div>
 
@@ -53,10 +53,10 @@ export default function Home() {
           <div className="p-8">
             {activeTab === 'track' ? (
               <div className="space-y-12">
-                <MentalStateSelector />
-                <EnergyLevel />
                 <TimePerceptionCanvas />
                 <ActivityTracker />
+                <MentalStateSelector />
+                <EnergyLevel />
                 <div className="flex justify-end pt-6">
                   <button
                     onClick={handleSave}
